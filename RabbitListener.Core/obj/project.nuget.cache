@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "1mqwR48RWyMsZmbf3vaiKhKtTJtchTbTKcyTAbHk3AGgaAma/XbUxi0KRmqBnmTyJ0Jb8MpgaW8eD7rf8ePPFg==",
+  "success": true,
+  "projectFilePath": "C:\\dev\\RabbitListener\\RabbitListener.Core\\RabbitListener.Core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Mustafa\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Mustafa\\.nuget\\packages\\rabbitmq.client\\6.5.0\\rabbitmq.client.6.5.0.nupkg.sha512",
+    "C:\\Users\\Mustafa\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\Mustafa\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B42503BF-79FE-42A1-B0D1-71105D36D4AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitListener.Worker", "RabbitListener.Worker\RabbitListener.Worker.csproj", "{ADFC76B6-75EC-46C2-AB71-153750E24B08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitListener.Core", "RabbitListener.Core\RabbitListener.Core.csproj", "{3EC92C46-DE1C-45C2-98F4-E13720F8C955}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ADFC76B6-75EC-46C2-AB71-153750E24B08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADFC76B6-75EC-46C2-AB71-153750E24B08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADFC76B6-75EC-46C2-AB71-153750E24B08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADFC76B6-75EC-46C2-AB71-153750E24B08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC92C46-DE1C-45C2-98F4-E13720F8C955}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC92C46-DE1C-45C2-98F4-E13720F8C955}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC92C46-DE1C-45C2-98F4-E13720F8C955}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC92C46-DE1C-45C2-98F4-E13720F8C955}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ADFC76B6-75EC-46C2-AB71-153750E24B08} = {B42503BF-79FE-42A1-B0D1-71105D36D4AF}
+		{3EC92C46-DE1C-45C2-98F4-E13720F8C955} = {B42503BF-79FE-42A1-B0D1-71105D36D4AF}
+	EndGlobalSection
+EndGlobal

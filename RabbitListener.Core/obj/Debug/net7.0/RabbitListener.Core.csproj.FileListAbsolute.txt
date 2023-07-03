@@ -1,0 +1,12 @@
+C:\dev\RabbitListener\RabbitListener.Core\bin\Debug\net7.0\RabbitListener.Core.deps.json
+C:\dev\RabbitListener\RabbitListener.Core\bin\Debug\net7.0\RabbitListener.Core.dll
+C:\dev\RabbitListener\RabbitListener.Core\bin\Debug\net7.0\RabbitListener.Core.pdb
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\RabbitListener.Core.csproj.AssemblyReference.cache
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\RabbitListener.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\RabbitListener.Core.AssemblyInfoInputs.cache
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\RabbitListener.Core.AssemblyInfo.cs
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\RabbitListener.Core.csproj.CoreCompileInputs.cache
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\RabbitListener.Core.dll
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\refint\RabbitListener.Core.dll
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\RabbitListener.Core.pdb
+C:\dev\RabbitListener\RabbitListener.Core\obj\Debug\net7.0\ref\RabbitListener.Core.dll
