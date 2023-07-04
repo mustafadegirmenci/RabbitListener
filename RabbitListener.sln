@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitListener.Worker", "Ra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitListener.Core", "RabbitListener.Core\RabbitListener.Core.csproj", "{3EC92C46-DE1C-45C2-98F4-E13720F8C955}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitListener.Testing", "RabbitListener.Testing\RabbitListener.Testing.csproj", "{CB2B36A7-88A4-4F25-89B9-AEC8D126844E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,9 +22,14 @@ Global
 		{3EC92C46-DE1C-45C2-98F4-E13720F8C955}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EC92C46-DE1C-45C2-98F4-E13720F8C955}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EC92C46-DE1C-45C2-98F4-E13720F8C955}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB2B36A7-88A4-4F25-89B9-AEC8D126844E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB2B36A7-88A4-4F25-89B9-AEC8D126844E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB2B36A7-88A4-4F25-89B9-AEC8D126844E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB2B36A7-88A4-4F25-89B9-AEC8D126844E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ADFC76B6-75EC-46C2-AB71-153750E24B08} = {B42503BF-79FE-42A1-B0D1-71105D36D4AF}
 		{3EC92C46-DE1C-45C2-98F4-E13720F8C955} = {B42503BF-79FE-42A1-B0D1-71105D36D4AF}
+		{CB2B36A7-88A4-4F25-89B9-AEC8D126844E} = {B42503BF-79FE-42A1-B0D1-71105D36D4AF}
 	EndGlobalSection
 EndGlobal

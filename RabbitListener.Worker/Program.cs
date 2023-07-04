@@ -1,4 +1,3 @@
-using RabbitListener.Core;
 using RabbitListener.Core.Services;
 
 namespace RabbitListener.Worker;
@@ -10,13 +9,13 @@ public class Program
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
-                services.AddSingleton<ListenerService, ListenerService>();
+                services.AddSingleton<RabbitService, RabbitService>();
                 
-                services.AddSingleton<QueueReader, QueueReader>();
-                services.AddSingleton<QueueReceiver, QueueReceiver>();
+                services.AddSingleton<QueueManager, QueueManager>();
+                services.AddSingleton<QueueListener, QueueListener>();
                 
-                services.AddTransient<UrlStatusChecker, UrlStatusChecker>();
                 services.AddTransient<HttpService, HttpService>();
+                services.AddTransient<StatusLoggerService, StatusLoggerService>();
         
                 services.AddHostedService<Worker>();
             })

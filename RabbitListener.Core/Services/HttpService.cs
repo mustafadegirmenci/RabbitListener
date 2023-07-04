@@ -2,6 +2,13 @@
 
 public class HttpService
 {
+    public enum UrlResponseErrorCode
+    {
+        InvalidHttpRequest,
+        InvalidUrl,
+        EmptyOrNullUrl
+    }
+    
     public async Task<int> GetUrlResponseStatusCodeAsync(string url)
     {
         try
@@ -12,14 +19,17 @@ public class HttpService
             
             return (int)response.StatusCode;
         }
-        catch (HttpRequestException _)
+        catch (HttpRequestException)
         {
-            return -1;
+            return (int)UrlResponseErrorCode.InvalidHttpRequest;
         }
-        catch (InvalidOperationException _)
+        catch (InvalidOperationException)
         {
-            return -1;
+            return (int)UrlResponseErrorCode.InvalidUrl;
+        }
+        catch (ArgumentNullException)
+        {
+            return (int)UrlResponseErrorCode.EmptyOrNullUrl;
         }
     }
-
 }

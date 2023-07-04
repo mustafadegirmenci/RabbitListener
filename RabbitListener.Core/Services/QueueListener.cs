@@ -4,35 +4,26 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitListener.Core.Services;
 
-public class QueueReceiver
+public class QueueListener
 {
     private readonly IModel _channel;
 
-    public QueueReceiver()
+    public QueueListener()
     {
         _channel = new ConnectionFactory { HostName = "localhost"}
             .CreateConnection().CreateModel();
     }
     
-    public void StartListening(string queueName)
+    public bool TryStartListening(string queueName)
     {
-        if (string.IsNullOrWhiteSpace(queueName))
-        {
-            throw new ArgumentNullException(nameof(queueName));
-        }
-        
-        // _channel.QueueDeclare(queue: queueName,
-        //     durable: false,
-        //     exclusive: false,
-        //     autoDelete: false,
-        //     arguments: null);
+        if (string.IsNullOrWhiteSpace(queueName)) return false;
 
         var consumer = new EventingBasicConsumer(_channel);
         consumer.Received += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            await SendMessageToQueue(message);
+            await QueueManager.FetchMessage(message);
 
             // Acknowledge the message
             _channel.BasicAck(ea.DeliveryTag, multiple: false);
@@ -41,11 +32,7 @@ public class QueueReceiver
         _channel.BasicConsume(queue: queueName,
             autoAck: false,  // Manual acknowledgment
             consumer: consumer);
-    }
 
-    private static async Task SendMessageToQueue(string message)
-    {
-        await Task.CompletedTask;
-        QueueReader.MessageQueue.Enqueue(message);
+        return true;
     }
 }
