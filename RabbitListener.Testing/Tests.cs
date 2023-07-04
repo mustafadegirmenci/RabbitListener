@@ -16,7 +16,7 @@ public class Tests
     }
 
     [Test]
-    public async Task Test_Null_Url()
+    public async Task Test_Url_Null()
     {
         var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("");
         
@@ -24,58 +24,68 @@ public class Tests
     }
     
     [Test]
-    public async Task Test_Empty_Url()
+    public async Task Test_Url_Whitespace()
     {
         var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("   ");
         
         Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.EmptyOrNullUrl));
     }
     
-    [Test]
-    public async Task Test_Invalid_Url()
+    [TestCase("google")]
+    public async Task Test_Url_Invalid(string urlToTest)
     {
-        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("dsafasfa");
+        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync(urlToTest);
         
         Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.InvalidUrl));
+    }         
+
+    [TestCase("https://www. google.com/")]
+    public async Task Test_Url_Contains_Whitespace(string urlToTest)
+    {
+        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync(urlToTest);
+        
+        Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.UrlWithWhitespace));
     }        
     
-    [Test]
-    public async Task Test_Invalid_Request()
+    [TestCase("https://www.google/")]
+    public async Task Test_Url_Invalid_Request(string urlToTest)
     {
-        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("https://www.google/");
+        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync(urlToTest);
         
         Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.InvalidHttpRequest));
     }    
     
-    [Test]
-    public async Task Test_Healthy_Url()
+    [TestCase("https://www.google.com/")]
+    [TestCase("https://www.youtube.com/")]
+    public async Task Test_Url_Healthy(string urlToTest)
     {
-        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("https://www.google.com/");
+        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync(urlToTest);
         
         Assert.That(errorCode, Is.EqualTo(200));
     }    
     
-    [Test]
-    public async Task Test_Healthy_But_Inaccessible_Url()
+    [TestCase("https://www.google.com/fsafsafsa")]
+    public async Task Test_Url_Healthy_But_Inaccessible(string urlToTest)
     {
-        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("https://www.google.com/fsafsafsa");
+        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync(urlToTest);
         
         Assert.That(errorCode, Is.EqualTo(404));
     }    
     
-    [Test]
-    public void Test_Invalid_Queue_Name()
+    [TestCase("urlsssss")]
+    [TestCase("2")]
+    [TestCase("URLS")]
+    public void Test_Queue_Name_Invalid(string queueNameToTest)
     {
-        var nameToTest = "urlsssss";
-        var state = _queueListener.TryStartListening(nameToTest);
+        var state = _queueListener.TryStartListening(queueNameToTest);
         
-        Assert.IsFalse(state, $"Queue name does not match.\nGiven: {nameToTest}\nShould be: urls");
+        Assert.IsFalse(state, $"Queue name does not match.\nGiven: {queueNameToTest}\nShould be: urls");
     }    
     
-    [Test]
-    public void Test_Valid_Queue_Name()
+    [TestCase("urls")]
+    public void Test_Queue_Name_Valid(string queueNameToTest)
     {
-        var state = _queueListener.TryStartListening("urls");
+        var state = _queueListener.TryStartListening(queueNameToTest);
         
         Assert.IsTrue(state);
     }

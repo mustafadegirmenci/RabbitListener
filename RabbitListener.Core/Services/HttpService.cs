@@ -6,7 +6,8 @@ public class HttpService
     {
         InvalidHttpRequest,
         InvalidUrl,
-        EmptyOrNullUrl
+        EmptyOrNullUrl,
+        UrlWithWhitespace
     }
     
     public async Task<int> GetUrlResponseStatusCodeAsync(string url)
@@ -31,6 +32,10 @@ public class HttpService
         catch (InvalidOperationException)
         {
             return (int)UrlResponseErrorCode.InvalidUrl;
+        }
+        catch (UriFormatException)
+        {
+            return (int)UrlResponseErrorCode.UrlWithWhitespace;
         }
     }
 }
