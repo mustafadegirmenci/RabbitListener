@@ -11,7 +11,7 @@ public class RabbitService
     private readonly HttpService _httpService;
 
     public RabbitService(
-        ILogger<RabbitService> logger, 
+        ILogger<RabbitService> logger,
         StatusLoggerService statusLoggerService,
         QueueManager queueManager,
         HttpService httpService)
@@ -40,7 +40,7 @@ public class RabbitService
     {
         _logger.LogInformation("RabbitListener service stopped at: {time}", DateTimeOffset.Now);
     }
-    
+
     public async Task ExecuteAsync()
     {
         var message = await _queueManager.ReadMessageFromQueue();
@@ -48,7 +48,7 @@ public class RabbitService
 
         var statusCode = await _httpService.GetUrlResponseStatusCodeAsync(message);
         var urlStatus = new UrlStatus(message, statusCode);
-            
+
         _statusLoggerService.LogStatusInfo(urlStatus);
     }
 }

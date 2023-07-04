@@ -17,21 +17,28 @@ public class QueueListener
     public bool TryStartListening(string queueName)
     {
         if (string.IsNullOrWhiteSpace(queueName)) return false;
-
-        var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += async (model, ea) =>
+        
+        try
         {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            await QueueManager.FetchMessage(message);
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += async (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                await QueueManager.FetchMessage(message);
 
-            // Acknowledge the message
-            _channel.BasicAck(ea.DeliveryTag, multiple: false);
-        };
+                // Acknowledge the message
+                _channel.BasicAck(ea.DeliveryTag, multiple: false);
+            };
 
-        _channel.BasicConsume(queue: queueName,
-            autoAck: false,  // Manual acknowledgment
-            consumer: consumer);
+            _channel.BasicConsume(queue: queueName,
+                autoAck: false,  // Manual acknowledgment
+                consumer: consumer);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
 
         return true;
     }

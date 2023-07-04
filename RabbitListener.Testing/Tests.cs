@@ -16,9 +16,17 @@ public class Tests
     }
 
     [Test]
+    public async Task Test_Null_Url()
+    {
+        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("");
+        
+        Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.EmptyOrNullUrl));
+    }
+    
+    [Test]
     public async Task Test_Empty_Url()
     {
-        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync(" ");
+        var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("   ");
         
         Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.EmptyOrNullUrl));
     }
@@ -36,7 +44,7 @@ public class Tests
     {
         var errorCode = await _httpService.GetUrlResponseStatusCodeAsync("https://www.google/");
         
-        Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.InvalidUrl));
+        Assert.That(errorCode, Is.EqualTo((int)HttpService.UrlResponseErrorCode.InvalidHttpRequest));
     }    
     
     [Test]

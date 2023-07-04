@@ -11,6 +11,11 @@ public class HttpService
     
     public async Task<int> GetUrlResponseStatusCodeAsync(string url)
     {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return (int)UrlResponseErrorCode.EmptyOrNullUrl;
+        }
+        
         try
         {
             using var client = new HttpClient();
@@ -26,10 +31,6 @@ public class HttpService
         catch (InvalidOperationException)
         {
             return (int)UrlResponseErrorCode.InvalidUrl;
-        }
-        catch (ArgumentNullException)
-        {
-            return (int)UrlResponseErrorCode.EmptyOrNullUrl;
         }
     }
 }
