@@ -7,6 +7,7 @@ public class Tests
 {
     private HttpService _httpService;
     private QueueListener _queueListener;
+    private QueueManager _queueManager;
     
     [SetUp]
     public void Setup()
@@ -88,5 +89,29 @@ public class Tests
         var state = _queueListener.TryStartListening(queueNameToTest);
         
         Assert.IsTrue(state);
+    }
+
+    [TestCase("1")]
+    public async Task Test_Queue_Fetch_Read(string testMessage)
+    {
+        string? readMessage = null;
+        try
+        {
+            await QueueManager.FetchMessage(testMessage);
+            readMessage = await QueueManager.ReadMessageFromQueue();
+        }
+        catch (Exception)
+        {
+            Assert.Fail();
+        }
+
+        if (readMessage == null)
+        {
+            Assert.Fail();
+        }
+        else if (readMessage.Equals(testMessage))
+        {
+            Assert.Pass();
+        }
     }
 }

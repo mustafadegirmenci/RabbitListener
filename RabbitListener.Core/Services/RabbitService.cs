@@ -43,7 +43,7 @@ public class RabbitService
 
     public async Task ExecuteAsync()
     {
-        var message = await _queueManager.ReadMessageFromQueue();
+        var message = await QueueManager.ReadMessageFromQueue();
         if (string.IsNullOrEmpty(message)) return;
 
         var statusCode = await _httpService.GetUrlResponseStatusCodeAsync(message);

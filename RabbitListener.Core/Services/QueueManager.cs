@@ -4,7 +4,7 @@ public class QueueManager
 {
     public static readonly Queue<string?> MessageQueue = new Queue<string?>();
 
-    public async Task<string?> ReadMessageFromQueue()
+    public static async Task<string?> ReadMessageFromQueue()
     {
         await Task.CompletedTask;
         return MessageQueue.Count == 0 ? null : MessageQueue.Dequeue();

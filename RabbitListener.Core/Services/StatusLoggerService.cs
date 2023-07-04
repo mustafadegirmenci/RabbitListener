@@ -27,6 +27,10 @@ public class StatusLoggerService
             case (int)HttpService.UrlResponseErrorCode.EmptyOrNullUrl:
                 _logger.LogWarning("Url is empty.");
                 break;
+                        
+            case (int)HttpService.UrlResponseErrorCode.UrlWithWhitespace:
+                _logger.LogWarning("Url ({url}) contains whitespaces.", status.Url);
+                break;
             
             default:
                 _logger.LogInformation(status.ToJson());
