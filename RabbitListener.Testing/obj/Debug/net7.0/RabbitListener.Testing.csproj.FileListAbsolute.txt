@@ -136,3 +136,5 @@ C:\dev\RabbitListener\RabbitListener.Testing\obj\Debug\net7.0\refint\RabbitListe
 C:\dev\RabbitListener\RabbitListener.Testing\obj\Debug\net7.0\RabbitListener.Testing.pdb
 C:\dev\RabbitListener\RabbitListener.Testing\obj\Debug\net7.0\RabbitListener.Testing.genruntimeconfig.cache
 C:\dev\RabbitListener\RabbitListener.Testing\obj\Debug\net7.0\ref\RabbitListener.Testing.dll
+C:\dev\RabbitListener\RabbitListener.Testing\bin\Debug\net7.0\Castle.Core.dll
+C:\dev\RabbitListener\RabbitListener.Testing\bin\Debug\net7.0\Moq.dll

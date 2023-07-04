@@ -6,19 +6,16 @@ namespace RabbitListener.Core.Services;
 public class RabbitService
 {
     private readonly ILogger<RabbitService> _logger;
-    private readonly StatusLoggerService _statusLoggerService;
-    private readonly QueueManager _queueManager;
+    private readonly LoggerService _loggerService;
     private readonly HttpService _httpService;
 
     public RabbitService(
         ILogger<RabbitService> logger,
-        StatusLoggerService statusLoggerService,
-        QueueManager queueManager,
+        LoggerService loggerService,
         HttpService httpService)
     {
         _logger = logger;
-        _statusLoggerService = statusLoggerService;
-        _queueManager = queueManager;
+        _loggerService = loggerService;
         _httpService = httpService;
     }
 
@@ -28,20 +25,20 @@ public class RabbitService
 
         if (queueReceiver.TryStartListening("urls"))
         {
-            _logger.LogInformation("RabbitListener service started at: {time}", DateTimeOffset.Now);
+            _logger?.LogInformation("RabbitListener service started at: {time}", DateTimeOffset.Now);
         }
         else
         {
-            _logger.LogWarning("Couldn't start RabbitListener service.");
+            _logger?.LogWarning("Couldn't start RabbitListener service.");
         }
     }
 
     public void OnComplete()
     {
-        _logger.LogInformation("RabbitListener service stopped at: {time}", DateTimeOffset.Now);
+        _logger?.LogInformation("RabbitListener service stopped at: {time}", DateTimeOffset.Now);
     }
 
-    public async Task ExecuteAsync()
+    public async Task ExecuteAsync(bool loggingEnabled = true)
     {
         var message = await QueueManager.ReadMessageFromQueue();
         if (string.IsNullOrEmpty(message)) return;
@@ -49,6 +46,6 @@ public class RabbitService
         var statusCode = await _httpService.GetUrlResponseStatusCodeAsync(message);
         var urlStatus = new UrlStatus(message, statusCode);
 
-        _statusLoggerService.LogStatusInfo(urlStatus);
+        if (loggingEnabled) _loggerService.LogStatusInfo(urlStatus);
     }
 }

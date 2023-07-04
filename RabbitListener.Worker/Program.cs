@@ -15,7 +15,7 @@ public class Program
                 services.AddSingleton<QueueListener, QueueListener>();
                 
                 services.AddTransient<HttpService, HttpService>();
-                services.AddTransient<StatusLoggerService, StatusLoggerService>();
+                services.AddTransient<LoggerService, LoggerService>();
         
                 services.AddHostedService<Worker>();
             })

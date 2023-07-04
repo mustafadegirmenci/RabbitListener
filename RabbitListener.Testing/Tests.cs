@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Logging;
+using Moq;
+using RabbitListener.Core.Entities;
 using RabbitListener.Core.Services;
 
 namespace RabbitListener.Testing;
@@ -5,15 +8,21 @@ namespace RabbitListener.Testing;
 [TestFixture]
 public class Tests
 {
+    private Mock<ILogger<RabbitService>> _logger;
     private HttpService _httpService;
+    private LoggerService _loggerService;
     private QueueListener _queueListener;
-    private QueueManager _queueManager;
-    
+    private RabbitService _rabbitService;
+
     [SetUp]
     public void Setup()
     {
+        _logger = new Mock<ILogger<RabbitService>>();
         _httpService = new HttpService();
         _queueListener = new QueueListener();
+        _loggerService = new LoggerService(_logger.Object);
+
+        _rabbitService = new RabbitService(_logger.Object, _loggerService, _httpService);
     }
 
     [Test]
@@ -92,26 +101,43 @@ public class Tests
     }
 
     [TestCase("1")]
-    public async Task Test_Queue_Fetch_Read(string testMessage)
+    public async Task Test_Queue_MessageMatches(string testMessage)
     {
-        string? readMessage = null;
-        try
+        await QueueManager.FetchMessage(testMessage);
+        string? readMessage = await QueueManager.ReadMessageFromQueue();
+        
+        Assert.Multiple(() =>
         {
-            await QueueManager.FetchMessage(testMessage);
-            readMessage = await QueueManager.ReadMessageFromQueue();
-        }
-        catch (Exception)
-        {
-            Assert.Fail();
-        }
+            Assert.NotNull(readMessage);
+            if (readMessage != null) Assert.That(testMessage, Is.EqualTo(readMessage));
+        });
+    }
 
-        if (readMessage == null)
+    [Test]
+    public async Task Test_RabbitService_Execute()
+    {
+        QueueManager.MessageQueue.Clear();
+        QueueManager.MessageQueue.Enqueue("TEST");
+        
+        _rabbitService.Init();
+        await _rabbitService.ExecuteAsync(loggingEnabled: false);
+        _rabbitService.OnComplete();
+        
+        Assert.That(QueueManager.MessageQueue, Is.Empty);
+    }
+
+    [TestCase("example", 111)]
+    [TestCase("example", HttpService.UrlResponseErrorCode.InvalidUrl)]
+    [TestCase("example", HttpService.UrlResponseErrorCode.InvalidHttpRequest)]
+    [TestCase("example", HttpService.UrlResponseErrorCode.EmptyOrNullUrl)]
+    [TestCase("example", HttpService.UrlResponseErrorCode.UrlWithWhitespace)]
+    public void Test_LoggerService_LogStatus(string testUrl, int testStatusCode)
+    {
+        var statusToLog = new UrlStatus(testUrl, testStatusCode);
+
+        Assert.DoesNotThrow(() =>
         {
-            Assert.Fail();
-        }
-        else if (readMessage.Equals(testMessage))
-        {
-            Assert.Pass();
-        }
+            _loggerService.LogStatusInfo(statusToLog);
+        });
     }
 }

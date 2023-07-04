@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "SuD0419T8t4eF1lxYhRtA9zVcbZNC7s9598wE412V0WZPEiYk6saAFx/IKXH6rDbfpJxdJQ5j4ZwzG711YBjJA==",
+  "dgSpecHash": "DcG9DCnkF1aSgHB01mv+83simDFg1MWD9BC9ulvDM7HWftN1TjkgVNrzsxWXK6B8TevShNpBB9zWCzceRJEIFw==",
   "success": true,
   "projectFilePath": "C:\\dev\\RabbitListener\\RabbitListener.Testing\\RabbitListener.Testing.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Mustafa\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\microsoft.csharp\\4.0.1\\microsoft.csharp.4.0.1.nupkg.sha512",
@@ -37,6 +38,7 @@
     "C:\\Users\\Mustafa\\.nuget\\packages\\microsoft.netcore.targets\\1.0.1\\microsoft.netcore.targets.1.0.1.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\microsoft.testplatform.objectmodel\\17.3.2\\microsoft.testplatform.objectmodel.17.3.2.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\microsoft.testplatform.testhost\\17.3.2\\microsoft.testplatform.testhost.17.3.2.nupkg.sha512",
+    "C:\\Users\\Mustafa\\.nuget\\packages\\moq\\4.18.4\\moq.4.18.4.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\netstandard.library\\2.0.0\\netstandard.library.2.0.0.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\newtonsoft.json\\9.0.1\\newtonsoft.json.9.0.1.nupkg.sha512",
     "C:\\Users\\Mustafa\\.nuget\\packages\\nuget.frameworks\\5.11.0\\nuget.frameworks.5.11.0.nupkg.sha512",
