@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B42503BF-79FE-42A1-B0D1-71105D36D4AF}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		.dockerignore = .dockerignore
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitListener.Worker", "RabbitListener.Worker\RabbitListener.Worker.csproj", "{ADFC76B6-75EC-46C2-AB71-153750E24B08}"
 EndProject

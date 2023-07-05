@@ -5,16 +5,13 @@ namespace RabbitListener.Core.Services;
 
 public class RabbitService
 {
-    private readonly ILogger<RabbitService> _logger;
     private readonly LoggerService _loggerService;
     private readonly HttpService _httpService;
 
     public RabbitService(
-        ILogger<RabbitService> logger,
         LoggerService loggerService,
         HttpService httpService)
     {
-        _logger = logger;
         _loggerService = loggerService;
         _httpService = httpService;
     }
@@ -25,17 +22,17 @@ public class RabbitService
 
         if (queueReceiver.TryStartListening("urls"))
         {
-            _logger?.LogInformation("RabbitListener service started at: {time}", DateTimeOffset.Now);
+            _loggerService.LogInformation("RabbitListener service started at: {time}", DateTimeOffset.Now);
         }
         else
         {
-            _logger?.LogWarning("Couldn't start RabbitListener service.");
+            _loggerService.LogWarning("Couldn't start RabbitListener service.");
         }
     }
 
     public void OnComplete()
     {
-        _logger?.LogInformation("RabbitListener service stopped at: {time}", DateTimeOffset.Now);
+        _loggerService.LogInformation("RabbitListener service stopped at: {time}", DateTimeOffset.Now);
     }
 
     public async Task ExecuteAsync(bool loggingEnabled = true)

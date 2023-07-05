@@ -22,7 +22,7 @@ public class Tests
         _queueListener = new QueueListener();
         _loggerService = new LoggerService(_logger.Object);
 
-        _rabbitService = new RabbitService(_logger.Object, _loggerService, _httpService);
+        _rabbitService = new RabbitService(_loggerService, _httpService);
     }
 
     [Test]
@@ -138,6 +138,16 @@ public class Tests
         Assert.DoesNotThrow(() =>
         {
             _loggerService.LogStatusInfo(statusToLog);
+        });
+    }
+    
+    [TestCase("example")]
+    public void Test_LoggerService_LogInfoAndWarning(string testMessage)
+    {
+        Assert.DoesNotThrow(() =>
+        {
+            _loggerService.LogInformation(testMessage);
+            _loggerService.LogWarning(testMessage);
         });
     }
 }

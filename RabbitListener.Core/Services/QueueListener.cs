@@ -10,7 +10,10 @@ public class QueueListener
 
     public QueueListener()
     {
-        _channel = new ConnectionFactory { HostName = "localhost"}
+        var isRunningInContainer = bool.TryParse(
+            Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var inDocker);
+    
+        _channel = new ConnectionFactory { HostName = isRunningInContainer ? "rabbitmq" : "localhost"}
             .CreateConnection().CreateModel();
     }
     
