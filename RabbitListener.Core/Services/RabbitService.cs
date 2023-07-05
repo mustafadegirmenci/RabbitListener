@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using RabbitListener.Core.Entities;
+﻿using RabbitListener.Core.Entities;
 
 namespace RabbitListener.Core.Services;
 
