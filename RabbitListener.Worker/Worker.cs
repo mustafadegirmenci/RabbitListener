@@ -4,7 +4,7 @@ namespace RabbitListener.Worker;
 
 public class Worker : BackgroundService
 {    
-    private const int DelayMilliseconds = 1000;
+    private const int DelayMilliseconds = 100;
     private readonly RabbitService _rabbitService;
     
     public Worker(RabbitService rabbitService)

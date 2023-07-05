@@ -2,6 +2,8 @@
 
 public class HttpService
 {
+    private readonly HttpClient _client = new();
+    
     public enum UrlResponseErrorCode
     {
         InvalidHttpRequest,
@@ -19,9 +21,8 @@ public class HttpService
         
         try
         {
-            using var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Head, url);
-            var response = await client.SendAsync(request);
+            var response = await _client.SendAsync(request);
             
             return (int)response.StatusCode;
         }

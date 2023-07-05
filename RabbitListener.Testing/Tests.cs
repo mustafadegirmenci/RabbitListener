@@ -9,6 +9,7 @@ namespace RabbitListener.Testing;
 public class Tests
 {
     private Mock<ILogger<RabbitService>> _logger;
+    private Mock<ConsoleProgressBar> _consoleProgressBar;
     private HttpService _httpService;
     private LoggerService _loggerService;
     private QueueListener _queueListener;
@@ -18,11 +19,12 @@ public class Tests
     public void Setup()
     {
         _logger = new Mock<ILogger<RabbitService>>();
+        _consoleProgressBar = new Mock<ConsoleProgressBar>();
         _httpService = new HttpService();
         _queueListener = new QueueListener();
         _loggerService = new LoggerService(_logger.Object);
 
-        _rabbitService = new RabbitService(_loggerService, _httpService);
+        _rabbitService = new RabbitService(_loggerService, _httpService, _consoleProgressBar.Object);
     }
 
     [Test]
