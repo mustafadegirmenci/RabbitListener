@@ -30,20 +30,27 @@ public class QueueListener
         {
             throw new ArgumentNullException(queueName);
         }
-        
-        var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += async (model, ea) =>
+
+        try
         {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += async (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
                 
-            OnMessageReceived?.Invoke(message);
+                OnMessageReceived?.Invoke(message);
 
-            _channel.BasicAck(ea.DeliveryTag, multiple: false);
-        };
+                _channel.BasicAck(ea.DeliveryTag, multiple: false);
+            };
 
-        _channel.BasicConsume(queue: queueName,
-            autoAck: false,
-            consumer: consumer);
+            _channel.BasicConsume(queue: queueName,
+                autoAck: false,
+                consumer: consumer);
+        }
+        catch (Exception e)
+        {
+            throw new Exception();
+        }
     }
 }

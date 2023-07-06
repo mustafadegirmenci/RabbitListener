@@ -22,7 +22,7 @@ public class ConsoleProgressBar : IProgress<float>
         Value = 0;
     }
     
-    public void Report(float _)
+    public void Report(float _ = 0)
     {
         lock (_consoleLock)
         {

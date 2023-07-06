@@ -31,20 +31,28 @@ public class RabbitService
 
     private async void OnQueueListenerOnMessageReceived(string message)
     {
-        await SendRequestAndLogStatus(message);
-        //await SendMultipleRequests(message, 10000);
+        //await SendRequestAndLogStatus(message);
+        await SendMultipleRequests(message, 10000, true);
     }
 
-    private async Task SendMultipleRequests(string url, ushort requestCount)
+    private async Task SendMultipleRequests(string url, ushort requestCount, bool showProgressBar = false)
     {
         var tasks = new List<Task<HttpResponse>>();
         
         var stopwatch = new Stopwatch();
         stopwatch.Start();
         
+        if (showProgressBar) _consoleProgressBar.Init(maxValue: requestCount);
         for (var i = 0; i < requestCount; i++)
         {
             var task = _httpService.SendRequestAsync(url);
+            if (showProgressBar)
+            {
+                task.GetAwaiter().OnCompleted(() =>
+                {
+                    _consoleProgressBar.Report();
+                });
+            }
             tasks.Add(task);
         }
 
