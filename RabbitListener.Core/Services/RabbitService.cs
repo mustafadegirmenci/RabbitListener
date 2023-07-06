@@ -51,11 +51,17 @@ public class RabbitService
         }
 
         var messageToProcess = _fetchedMessageQueue.Dequeue();
+
+        var responseSuccess = false;
         
-        SendRequestAndLogStatus(messageToProcess)
+        SendRequestAndLogStatus(messageToProcess, response => { responseSuccess = response.Exception == null;})
             .Wait();
-        SendMultipleRequests(messageToProcess, 10000, true)
-            .Wait();
+
+        if (responseSuccess)
+        {
+            SendMultipleRequests(messageToProcess, 10000, true)
+                .Wait();
+        }
 
         await HandleMessage();
     }
@@ -91,10 +97,11 @@ public class RabbitService
             stopwatch.Elapsed.TotalSeconds, requestCount/stopwatch.Elapsed.TotalSeconds);
     }    
     
-    private async Task SendRequestAndLogStatus(string url)
+    private async Task SendRequestAndLogStatus(string url, Action<HttpResponse>? callback = null)
     {
         var httpResponse = await _httpService.SendRequestAsync(url);
         LogResponse(httpResponse);
+        callback?.Invoke(httpResponse);
     }
 
     private void LogResponse(HttpResponse response)
