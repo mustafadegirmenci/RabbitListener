@@ -6,11 +6,13 @@ namespace RabbitListener.Core.Services;
 
 public class QueueListener
 {
+    public Action<string>? OnMessageReceived;
+    
     private readonly IModel _channel;
 
     public QueueListener()
     {
-        var inDocker = bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out var _);
+        var inDocker = bool.TryParse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), out _);
 
             _channel = new ConnectionFactory
             {
@@ -22,32 +24,26 @@ public class QueueListener
             .CreateConnection().CreateModel();
     }
     
-    public bool TryStartListening(string queueName)
+    public void StartListening(string queueName = "urls")
     {
-        if (string.IsNullOrWhiteSpace(queueName)) return false;
+        if (string.IsNullOrWhiteSpace(queueName))
+        {
+            throw new ArgumentNullException(queueName);
+        }
         
-        try
+        var consumer = new EventingBasicConsumer(_channel);
+        consumer.Received += async (model, ea) =>
         {
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += async (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                await QueueManager.FetchMessage(message);
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+                
+            OnMessageReceived?.Invoke(message);
 
-                // Acknowledge the message
-                _channel.BasicAck(ea.DeliveryTag, multiple: false);
-            };
+            _channel.BasicAck(ea.DeliveryTag, multiple: false);
+        };
 
-            _channel.BasicConsume(queue: queueName,
-                autoAck: false,  // Manual acknowledgment
-                consumer: consumer);
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-
-        return true;
+        _channel.BasicConsume(queue: queueName,
+            autoAck: false,
+            consumer: consumer);
     }
 }

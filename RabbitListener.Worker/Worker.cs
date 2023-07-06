@@ -4,7 +4,7 @@ namespace RabbitListener.Worker;
 
 public class Worker : BackgroundService
 {    
-    private const int DelayMilliseconds = 100;
+    private const int DelayMilliseconds = 1000;
     private readonly RabbitService _rabbitService;
     
     public Worker(RabbitService rabbitService)
@@ -18,10 +18,7 @@ public class Worker : BackgroundService
         
         while (!stoppingToken.IsCancellationRequested)
         {
-            await _rabbitService.ExecuteAsync();
             await Task.Delay(DelayMilliseconds, stoppingToken);
         }
-        
-        _rabbitService.OnComplete();
     }
 }

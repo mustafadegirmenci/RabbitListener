@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using RabbitListener.Core.Entities;
 
 namespace RabbitListener.Core.Services;
@@ -8,74 +9,104 @@ public class RabbitService
     private readonly LoggerService _loggerService;
     private readonly HttpService _httpService;
     private readonly ConsoleProgressBar _consoleProgressBar;
+    private readonly QueueListener _queueListener;
 
     public RabbitService(
         LoggerService loggerService,
         HttpService httpService,
-        ConsoleProgressBar consoleProgressBar)
+        ConsoleProgressBar consoleProgressBar, 
+        QueueListener queueListener)
     {
         _loggerService = loggerService;
         _httpService = httpService;
         _consoleProgressBar = consoleProgressBar;
+        _queueListener = queueListener;
     }
 
     public void Init()
     {
-        var queueReceiver = new QueueListener();
-
-        if (queueReceiver.TryStartListening("urls"))
-        {
-            _loggerService.LogInformation("RabbitListener service started at: {time}", DateTimeOffset.Now);
-        }
-        else
-        {
-            _loggerService.LogWarning("Couldn't start RabbitListener service.");
-        }
+        _queueListener.StartListening();
+        _queueListener.OnMessageReceived += OnQueueListenerOnMessageReceived;
     }
 
-    public void OnComplete()
+    private async void OnQueueListenerOnMessageReceived(string message)
     {
-        _loggerService.LogInformation("RabbitListener service stopped at: {time}", DateTimeOffset.Now);
+        await SendRequestAndLogStatus(message);
+        //await SendMultipleRequests(message, 10000);
     }
-    
-    public async Task ExecuteAsync(bool loggingEnabled = false)
-    {
-        var message = await QueueManager.ReadMessageFromQueue();
-        if (string.IsNullOrEmpty(message)) return;
 
-        const int requestCount = 10000;
+    private async Task SendMultipleRequests(string url, ushort requestCount)
+    {
+        var tasks = new List<Task<HttpResponse>>();
+        
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-
-        var statusCodes = await GetUrlResponseStatusCodesAsync(message, requestCount, _consoleProgressBar);
-        stopwatch.Stop();
-
-        _loggerService.LogInformation($"All the responses received.\nElapsed time: {stopwatch.Elapsed.ToString()}\nRequests per second: {requestCount/stopwatch.Elapsed.TotalSeconds}");
-        
-        foreach (var statusCode in statusCodes)
-        {
-            var urlStatus = new UrlStatus(message, statusCode);
-
-            if (loggingEnabled) _loggerService.LogStatusInfo(urlStatus);
-        }
-    }
-
-    private async Task<int[]> GetUrlResponseStatusCodesAsync(string url, int requestCount, IProgress<float> progress)
-    {
-        var tasks = new List<Task<int>>();
-
-        _consoleProgressBar.Init(requestCount);
         
         for (var i = 0; i < requestCount; i++)
         {
-            var task = _httpService.GetUrlResponseStatusCodeAsync(url);
-            task.GetAwaiter().OnCompleted(() =>
-            {
-                progress.Report(0);
-            });
+            var task = _httpService.SendRequestAsync(url);
             tasks.Add(task);
         }
 
-        return await Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
+        
+        stopwatch.Stop();
+
+        _loggerService.LogInformation($"All the responses received.\n" +
+                                      $"Elapsed time: {stopwatch.Elapsed.ToString()}\n" +
+                                      $"Requests per second: {requestCount/stopwatch.Elapsed.TotalSeconds}");
+    }    
+    
+    private async Task SendRequestAndLogStatus(string url)
+    {
+        var httpResponse = await _httpService.SendRequestAsync(url);
+        LogResponse(httpResponse);
+    }
+
+    private void LogResponse(HttpResponse response)
+    {
+        var responseSuccess = response.Exception == null && response.Response != null;
+
+        if (responseSuccess)
+        {
+            var urlStatus = new UrlStatus { ServiceName = "RabbitListener", Url = response.Url, StatusCode = response.Response.StatusCode};
+            
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            var statusAsJson = JsonSerializer.Serialize(urlStatus, options);
+
+            _loggerService.LogInformation(statusAsJson);
+        }
+        else
+        {
+            switch (response.Exception)
+            {
+                case ArgumentNullException:
+                    _loggerService.LogError("ArgumentNullException");
+                    break;
+                case InvalidOperationException:
+                    if (string.IsNullOrWhiteSpace(response.Url))
+                    {
+                        _loggerService.LogError("Url is empty.");
+                        break;
+                    }
+                    _loggerService.LogError("Url ({url}) is invalid.", response.Url);
+                    break;                
+                case HttpRequestException:
+                    _loggerService.LogError("HttpRequestException");
+                    break;
+                default:
+                    if (response.Url.Any(char.IsWhiteSpace))
+                    {
+                        _loggerService.LogError("URL ({url}) contains whitespaces.", response.Url);
+                        break;
+                    }
+                    _loggerService.LogError("Another error.");
+                    break;
+            }
+        }
     }
 }

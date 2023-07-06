@@ -1,15 +1,10 @@
-﻿namespace RabbitListener.Core.Entities;
+﻿using System.Net;
 
-public class UrlStatus
+namespace RabbitListener.Core.Entities;
+
+public struct UrlStatus
 {
     public string ServiceName { get; set; }
     public string Url { get; set; }
-    public int StatusCode { get; set; }
-
-    public UrlStatus(string url, int statusCode)
-    {
-        ServiceName = "RabbitListener";
-        Url = url;
-        StatusCode = statusCode;
-    }
+    public HttpStatusCode StatusCode { get; set; }
 }

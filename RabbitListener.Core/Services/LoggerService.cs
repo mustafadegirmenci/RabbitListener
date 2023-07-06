@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.Extensions.Logging;
-using RabbitListener.Core.Entities;
+﻿using Microsoft.Extensions.Logging;
 
 namespace RabbitListener.Core.Services;
 
@@ -18,41 +16,8 @@ public class LoggerService
         _logger.LogInformation(message, args);
     }
     
-    public void LogWarning(string? message, params object?[] args)
+    public void LogError(string? message, params object?[] args)
     {
-        _logger.LogWarning(message, args);
-    }
-    
-    public void LogStatusInfo(UrlStatus status)
-    {
-        switch (status.StatusCode)
-        {
-            case (int)HttpService.UrlResponseErrorCode.InvalidUrl:
-                _logger.LogWarning("Invalid url: {url}", status.Url);
-                break;
-
-            case (int)HttpService.UrlResponseErrorCode.InvalidHttpRequest:
-                _logger.LogWarning("Invalid http request to: {url}", status.Url);
-                break;
-
-            case (int)HttpService.UrlResponseErrorCode.EmptyOrNullUrl:
-                _logger.LogWarning("Url is empty.");
-                break;
-
-            case (int)HttpService.UrlResponseErrorCode.UrlWithWhitespace:
-                _logger.LogWarning("Url ({url}) contains whitespaces.", status.Url);
-                break;
-
-            default:
-                var options = new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                };
-
-                var statusAsJson = JsonSerializer.Serialize(status, options);
-
-                _logger.LogInformation(statusAsJson);
-                break;
-        }
+        _logger.LogError(message, args);
     }
 }
