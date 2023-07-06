@@ -11,6 +11,8 @@ public class RabbitService
     private readonly ConsoleProgressBar _consoleProgressBar;
     private readonly QueueListener _queueListener;
 
+    private readonly Queue<string> _fetchedMessageQueue = new();
+
     public RabbitService(
         LoggerService loggerService,
         HttpService httpService,
@@ -23,26 +25,50 @@ public class RabbitService
         _queueListener = queueListener;
     }
 
-    public void Init()
+    public void Start()
     {
         _queueListener.StartListening();
-        _queueListener.OnMessageReceived += OnQueueListenerOnMessageReceived;
+        _queueListener.OnMessageReceived += OnQueueListenerOnMessageReceived;;
     }
 
     private async void OnQueueListenerOnMessageReceived(string message)
     {
-        //await SendRequestAndLogStatus(message);
-        await SendMultipleRequests(message, 10000, true);
+        await FetchMessage(message);
+    }
+
+    private async Task FetchMessage(string message)
+    {
+        _fetchedMessageQueue.Enqueue(message);
+        
+        await HandleMessage();
+    }
+
+    private async Task HandleMessage()
+    {
+        if (_fetchedMessageQueue.Count == 0)
+        {
+            return;
+        }
+
+        var messageToProcess = _fetchedMessageQueue.Dequeue();
+        
+        SendRequestAndLogStatus(messageToProcess)
+            .Wait();
+        SendMultipleRequests(messageToProcess, 10000, true)
+            .Wait();
+
+        await HandleMessage();
     }
 
     private async Task SendMultipleRequests(string url, ushort requestCount, bool showProgressBar = false)
     {
         var tasks = new List<Task<HttpResponse>>();
+        if (showProgressBar) _consoleProgressBar.Init(maxValue: requestCount);
         
         var stopwatch = new Stopwatch();
         stopwatch.Start();
-        
-        if (showProgressBar) _consoleProgressBar.Init(maxValue: requestCount);
+
+        _loggerService.LogInformation("Sending {numberOfMessages} HEAD requests to {url}.\n", requestCount, url);
         for (var i = 0; i < requestCount; i++)
         {
             var task = _httpService.SendRequestAsync(url);
@@ -60,9 +86,9 @@ public class RabbitService
         
         stopwatch.Stop();
 
-        _loggerService.LogInformation($"All the responses received.\n" +
-                                      $"Elapsed time: {stopwatch.Elapsed.ToString()}\n" +
-                                      $"Requests per second: {requestCount/stopwatch.Elapsed.TotalSeconds}");
+        _loggerService.LogInformation(
+            "All the responses received in {t} seconds with a speed of: {r} requests/sec", 
+            stopwatch.Elapsed.TotalSeconds, requestCount/stopwatch.Elapsed.TotalSeconds);
     }    
     
     private async Task SendRequestAndLogStatus(string url)

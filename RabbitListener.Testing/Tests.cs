@@ -26,7 +26,7 @@ public class Tests
 
         _rabbitService = new RabbitService(_loggerService, _httpService, _consoleProgressBar.Object, _queueListener);
         
-        _rabbitService.Init();
+        _rabbitService.Start();
     }
 
     [TestCase(" ")]

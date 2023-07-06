@@ -36,6 +36,7 @@ public class QueueListener
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += async (model, ea) =>
             {
+                await Task.CompletedTask;
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 
@@ -48,7 +49,7 @@ public class QueueListener
                 autoAck: false,
                 consumer: consumer);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             throw new Exception();
         }

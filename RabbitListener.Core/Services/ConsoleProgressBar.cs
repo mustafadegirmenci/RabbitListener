@@ -3,7 +3,7 @@
 public class ConsoleProgressBar : IProgress<float>
 {
     private readonly object _consoleLock = new();
-    private const int ProgressBarWidth = 150;
+    private const int ProgressBarWidth = 100;
 
     private int Value { 
         get => _value;
@@ -19,7 +19,7 @@ public class ConsoleProgressBar : IProgress<float>
     public void Init(int maxValue)
     {
         _maxValue = maxValue;
-        Value = 0;
+        _value = 0;
     }
     
     public void Report(float _ = 0)
@@ -35,7 +35,7 @@ public class ConsoleProgressBar : IProgress<float>
         var percentage = (float)Value * 100 / _maxValue;
         
         var progressWidth = (int)(percentage / 100 * ProgressBarWidth);
-        var progressBar = new string('#', progressWidth) + new string('-', ProgressBarWidth - progressWidth);
+        var progressBar = new string('#', progressWidth) + new string('_', ProgressBarWidth - progressWidth);
 
         Console.SetCursorPosition(0, Console.CursorTop);
         Console.Write($"Progress: [{progressBar}] {percentage:000.00}%");
